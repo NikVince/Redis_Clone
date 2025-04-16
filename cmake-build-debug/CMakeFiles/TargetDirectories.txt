@@ -1,0 +1,3 @@
+/Users/home/Programming/repos/Redis_Clone/cmake-build-debug/CMakeFiles/Redis_Clone.dir
+/Users/home/Programming/repos/Redis_Clone/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/home/Programming/repos/Redis_Clone/cmake-build-debug/CMakeFiles/rebuild_cache.dir
