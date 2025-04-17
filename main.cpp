@@ -22,13 +22,10 @@ int main() {
     addr.sin_family = AF_INET;
     addr.sin_port = htons(1234);        // port
     addr.sin_addr.s_addr = htonl(0);    // wildcard IP 0.0.0.0
-    int rv = bind(fd, (const struct sockaddr *)&addr, sizeof(addr));
-    if (rv) { die("bind()"); }
 
     // binding and starting to listen == making socket available for connections
-    bind(ServerHandleFd, );
-    listen(ServerHandleFd);
-
+    int rv = bind(fd, (const struct sockaddr *)&addr, sizeof(addr));
+    if (rv) { die("bind()"); }
 
     return 0;// TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
