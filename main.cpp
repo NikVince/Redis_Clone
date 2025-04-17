@@ -16,6 +16,14 @@ int main() {
     // setting socket options before binding
     int reuse = 1;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
+    
+    // setting struct's options
+    struct sockaddr_in addr = {};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(1234);        // port
+    addr.sin_addr.s_addr = htonl(0);    // wildcard IP 0.0.0.0
+    int rv = bind(fd, (const struct sockaddr *)&addr, sizeof(addr));
+    if (rv) { die("bind()"); }
 
     // binding and starting to listen == making socket available for connections
     bind(ServerHandleFd, );
