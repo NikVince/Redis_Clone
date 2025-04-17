@@ -125,8 +125,10 @@ This project uses Jenkins to automate the development workflow:
 - [Redis Protocol Specification](https://redis.io/topics/protocol)
 - [Redis Command Reference](https://redis.io/commands)
 - [Redis Internals](https://redis.io/topics/internals)
+- [Beej's guide to Network Programming - PDF](https://beej.us/guide/bgnet/)
 - [Jenkins Pipeline Documentation](https://www.jenkins.io/doc/book/pipeline/)
 - [Continuous Integration Best Practices](https://martinfowler.com/articles/continuousIntegration.html)
+  
 
 ## License
 This project is licensed under the MIT License.
