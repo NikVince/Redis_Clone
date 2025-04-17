@@ -29,5 +29,18 @@ int main() {
     rv = listen(fd, SOMAXCON);
     if (rv) { die("listen()"); }
 
+    // infinite loop that accepts connections
+    while (true) {
+        struct sockaddr_in client_addr {};
+        socklen_t addrlen = sizeoff(client_addr);
+        int connfd = accept(fd, (struct sockaddr *)&client_addr, &addrlen);
+        if (connfd < 0) {
+            continue;
+        }
+    // not implemented yet function
+    do_something()
+    close(connfd);
+    }
+
     return 0;// TIP See CLion help at <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a>. Also, you can try interactive lessons for CLion by selecting 'Help | Learn IDE Features' from the main menu.
 }
