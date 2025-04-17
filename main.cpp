@@ -10,11 +10,15 @@
 
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 int main() {
-    // create Socket
-    int ServerHandleFd = socket();
-    // set listening port
-    bind(ServerHandleFd, address);
-    // create listening socket
+    // create Socket and initialize it
+    int ServerHandleFd = socket(AF_INET, SOCK_STREAM, 0);
+    
+    // setting socket options before binding
+    int reuse = 1;
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
+
+    // binding and starting to listen == making socket available for connections
+    bind(ServerHandleFd, );
     listen(ServerHandleFd);
 
 
