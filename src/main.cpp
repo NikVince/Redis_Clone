@@ -10,7 +10,7 @@
 
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 int main() {
-    std::cout << "This is test commit for Jenkins integration #2";
+    std::cout << "This is test commit for Jenkins integration #3";
     // create Socket and initialize it
     int ServerHandleFd = socket(AF_INET, SOCK_STREAM, 0);
     
