@@ -8,6 +8,25 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+// helper function for debug messages
+void msg(const char* message) {
+    std::cerr << message << std::endl;
+}
+
+// Function to hadle client connection
+static void do_something(int connfd) {
+    char buffer[1024];    
+    ssize_t n = read(connfd, buffer, sizeof(buffer) - 1);
+    if (n < 0) {
+        msg("read(error)");
+        return;
+    }
+    printf("client says: %s \n, rbuf");
+
+    std::string wbuf = "world";
+    write(connfd, wbuf, strlen(wbuf));
+}
+
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 int main() {
     std::cout << "This is test commit for Jenkins integration #5";
@@ -46,19 +65,6 @@ int main() {
         }
 
         close(connfd);
-    }
-
-    static void do_something(int connfd) {
-        std::string rbuf;
-        ssize_t n = read(connfd, rbuf, sizeof(rbuf) - 1);
-        if (n < 0) {
-            msg("read(error)");
-            return;
-        }
-        printf("client says: %s \n, rbuf");
-
-        std::string wbuf = "world";
-        write(connfd, wbuf, strlen(wbuf));
     }
 
     return 0;
