@@ -44,9 +44,21 @@ int main() {
         if (connfd < 0) {
             continue;
         }
-        // Placeholder for future implementation
-        // do_something();
+
         close(connfd);
+    }
+
+    static void do_something(int connfd) {
+        std::string rbuf;
+        ssize_t n = read(connfd, rbuf, sizeof(rbuf) - 1);
+        if (n < 0) {
+            msg("read(error)");
+            return;
+        }
+        printf("client says: %s \n, rbuf");
+
+        std::string wbuf = "world";
+        write(connfd, wbuf, strlen(wbuf));
     }
 
     return 0;
