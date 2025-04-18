@@ -13,6 +13,17 @@ pipeline {
     }
     
     stages {
+        stage('Debug') {
+            steps {
+                sh '''
+                    echo "BRANCH_NAME: ${BRANCH_NAME}"
+                    echo "GIT_BRANCH: ${GIT_BRANCH}"
+                    git branch -v
+                    git status
+                '''
+            }
+        }
+        
         stage('Checkout') {
             steps {
                 // Clean workspace before checkout
@@ -102,13 +113,6 @@ pipeline {
         }
         
         stage('Memory Check') {
-            when {
-                // Only run on stable branches or PRs
-                anyOf {
-                    branch 'test'
-                    branch 'main'
-                }
-            }
             steps {
                 sh '''
                 cd build
@@ -133,15 +137,8 @@ pipeline {
         }
         
         stage('Merge to Main') {
-            when {
-                allOf {
-                    // Only run on test branch
-                    branch 'test'
-                    // Only when the build is successful
-                    expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-                }
-            }
             steps {
+                echo "Starting merge process..."
                 // Use withCredentials to securely handle GitHub credentials
                 withCredentials([usernamePassword(credentialsId: 'github-auth', 
                                 passwordVariable: 'GIT_PASSWORD', 
@@ -150,33 +147,51 @@ pipeline {
                     # Configure Git user identity for the merge
                     git config user.name "Jenkins"
                     git config user.email "jenkins@example.com"
+                    echo "Git user configured"
+                    
+                    # DEBUG: Check current state
+                    echo "Current directory: $(pwd)"
+                    echo "Git status:"
+                    git status
                     
                     # Save current branch and commit
                     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
                     CURRENT_COMMIT=$(git rev-parse HEAD)
+                    echo "Current branch: $CURRENT_BRANCH"
+                    echo "Current commit: $CURRENT_COMMIT"
                     
                     # Fetch latest changes from both branches
-                    git fetch origin main:refs/remotes/origin/main
-                    git fetch origin test:refs/remotes/origin/test
+                    echo "Fetching latest changes..."
+                    git fetch origin main:refs/remotes/origin/main || echo "Failed to fetch main"
+                    git fetch origin test:refs/remotes/origin/test || echo "Failed to fetch test"
                     
-                    # Log what's happening
-                    echo "Current branch is $CURRENT_BRANCH at commit $CURRENT_COMMIT"
-                    echo "Attempting to merge test branch to main branch"
+                    # DEBUG: List branches
+                    echo "All branches:"
+                    git branch -a
                     
                     # Checkout main
-                    git checkout -f origin/main
+                    echo "Checking out main branch..."
+                    git checkout -f origin/main || echo "Failed to checkout main"
                     
-                    # Merge the test branch - non fast-forward is fine
-                    echo "Merging origin/test into main"
-                    git merge --no-ff origin/test -m "Auto-merge test to main [Jenkins]"
+                    # DEBUG: Check state after checkout
+                    echo "After checkout to main:"
+                    git status
                     
-                    # Push to main with credentials (URL without auth to avoid showing in logs)
-                    echo "Pushing to main branch"
-                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/NikVince/Redis_Clone.git HEAD:main
+                    # Merge the test branch
+                    echo "Merging test into main..."
+                    git merge --no-ff origin/test -m "Auto-merge test to main [Jenkins]" || echo "Merge failed with exit code $?"
+                    
+                    # DEBUG: Check state after merge
+                    echo "After merge:"
+                    git status
+                    
+                    # Push to main with credentials
+                    echo "Pushing to main branch..."
+                    git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/NikVince/Redis_Clone.git HEAD:main || echo "Push failed with exit code $?"
                     
                     # Return to original branch
                     git checkout $CURRENT_BRANCH
-                    echo "Merge completed successfully"
+                    echo "Returned to $CURRENT_BRANCH"
                     '''
                 }
             }
