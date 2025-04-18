@@ -151,17 +151,32 @@ pipeline {
                     git config user.name "Jenkins"
                     git config user.email "jenkins@example.com"
                     
-                    # Fetch latest from origin
+                    # Save current branch and commit
+                    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+                    CURRENT_COMMIT=$(git rev-parse HEAD)
+                    
+                    # Fetch latest changes from both branches
                     git fetch origin main:refs/remotes/origin/main
+                    git fetch origin test:refs/remotes/origin/test
                     
-                    # Try to merge - if it fails, the script will exit with error
-                    echo "Attempting to merge ${GIT_COMMIT} to main branch"
-                    git checkout -b main origin/main
-                    git merge --ff-only ${GIT_COMMIT}
+                    # Log what's happening
+                    echo "Current branch is $CURRENT_BRANCH at commit $CURRENT_COMMIT"
+                    echo "Attempting to merge test branch to main branch"
                     
-                    # Push to main with credentials
+                    # Checkout main
+                    git checkout -f origin/main
+                    
+                    # Merge the test branch - non fast-forward is fine
+                    echo "Merging origin/test into main"
+                    git merge --no-ff origin/test -m "Auto-merge test to main [Jenkins]"
+                    
+                    # Push to main with credentials (URL without auth to avoid showing in logs)
                     echo "Pushing to main branch"
                     git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/NikVince/Redis_Clone.git HEAD:main
+                    
+                    # Return to original branch
+                    git checkout $CURRENT_BRANCH
+                    echo "Merge completed successfully"
                     '''
                 }
             }
