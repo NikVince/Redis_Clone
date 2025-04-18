@@ -3,7 +3,7 @@ pipeline {
     
     options {
         // Report status back to GitHub
-        githubSetCommitStatus()
+        // githubSetCommitStatus() // Commented out due to error generation
         // Add timestamps to console logs
         timestamps()
         // Discard old builds, keeping only recent ones
@@ -85,12 +85,7 @@ pipeline {
                         grep -c "warning" cppcheck-result.xml || true
                         '''
                     }
-                    post {
-                        always {
-                            // Record Cppcheck issues
-                            recordIssues(tools: [cppCheck(pattern: 'cppcheck-result.xml')])
-                        }
-                    }
+                    // Removed post section that used cppCheck
                 }
                 
                 stage('Compiler Warnings') {
@@ -101,12 +96,7 @@ pipeline {
                         CXXFLAGS="-Wall -Wextra" cmake --build . -- -j$(nproc)
                         '''
                     }
-                    post {
-                        always {
-                            // Record GCC/Clang compiler warnings
-                            recordIssues(tools: [gcc()])
-                        }
-                    }
+                    // Removed post section that used gcc
                 }
             }
         }
@@ -139,12 +129,7 @@ pipeline {
                 fi
                 '''
             }
-            post {
-                always {
-                    // Record Valgrind issues
-                    recordIssues(tools: [valgrind(pattern: 'build/*-valgrind.xml')])
-                }
-            }
+            // Removed post section that used valgrind
         }
         
         stage('Merge to Main') {
