@@ -3,7 +3,7 @@ pipeline {
     
     options {
         // Report status back to GitHub
-        githubSetCommitStatus()
+        // githubSetCommitStatus() // Commented out due to error generation
         // Add timestamps to console logs
         timestamps()
         // Discard old builds, keeping only recent ones
