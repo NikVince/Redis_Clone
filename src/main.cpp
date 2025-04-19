@@ -21,10 +21,10 @@ static void do_something(int connfd) {
         msg("read(error)");
         return;
     }
-    printf("client says: %s \n, rbuf");
+    printf("client says: %s\n", buffer);
 
     std::string wbuf = "world";
-    write(connfd, wbuf, strlen(wbuf));
+    write(connfd, wbuf.c_str(), wbuf.length());
 }
 
 // TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
