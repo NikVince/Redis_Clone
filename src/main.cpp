@@ -13,7 +13,7 @@ void msg(const char* message) {
     std::cerr << message << std::endl;
 }
 
-// Function to hadle client connection
+// Function to handle client connection
 static void do_something(int connfd) {
     char buffer[1024];    
     ssize_t n = read(connfd, buffer, sizeof(buffer) - 1);
@@ -21,13 +21,18 @@ static void do_something(int connfd) {
         msg("read(error)");
         return;
     }
+
+    // null terminating C buffer
+    buffer[n] = '\n';
+    // converting C buffer into C++ string
+    std::string rbuf(buffer);
+
     printf("client says: %s\n", buffer);
 
     std::string wbuf = "world";
     write(connfd, wbuf.c_str(), wbuf.length());
 }
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 int main() {
     std::cout << "This is test commit for Jenkins integration #5";
     // create Socket and initialize it
