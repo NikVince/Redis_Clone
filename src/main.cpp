@@ -37,7 +37,11 @@ int main() {
     std::cout << "This is test commit for Jenkins integration #5";
     // create Socket and initialize it
     int ServerHandleFd = socket(AF_INET, SOCK_STREAM, 0);
-    
+    if (ServerHandleFd < 0) {
+        perror("socket()");
+        return 1;
+    }
+
     // setting socket options before binding
     int val = 1;
     setsockopt(ServerHandleFd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
@@ -54,6 +58,7 @@ int main() {
         perror("bind()"); 
         return 1; 
     }
+
     rv = listen(ServerHandleFd, SOMAXCONN);
     if (rv) { 
         perror("listen()"); 
@@ -68,6 +73,8 @@ int main() {
         if (connfd < 0) {
             continue;
         }
+        
+        do_something(connfd);
 
         close(connfd);
     }
